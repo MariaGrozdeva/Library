@@ -195,51 +195,37 @@ void CommandLine::login()
 	String username;
 	String password;
 
-	String tempUserName;
-	String tempPassword;
-	String empty;
-
-	char ch = 'a';
-
 	setAttributes(username);
 	setAttributes(password);
 
-	ifstream file;
-	file.open(fileName.getStr());
+	String name1;
+	name1.setStr("Pesho");
+	String password1;
+	password1.setStr("1234");
+	pl.AddUser(name1, password1);
 
-	while (!file.eof())
+	String name2;
+	name2.setStr("Gosho");
+	String password2;
+	password2.setStr("5678");
+	pl.AddUser(name2, password2, true);
+	int len = pl.getCount();
+
+	for (int i = 0; i < len; i++)
 	{
-		while (ch != ' ' && !file.eof())
-		{
-			file.get(ch);
-
-			if (ch != ' ')
-				tempUserName.push_back(ch);
-		}
-		while (ch != '\n')
-		{
-			file.get(ch);
-
-			if (ch != '\n')
-				tempPassword.push_back(ch);
-		}
-
-		if ((strcmp(tempUserName.getStr(), username.getStr()) == 0) &&
-			(strcmp(tempPassword.getStr(), password.getStr()) == 0))
+		if ((strcmp(pl.getUsers()[i].getUsername(), username.getStr()) == 0) &&
+			((strcmp(pl.getUsers()[i].getPassword(), password.getStr()) == 0)))
 		{
 			userExist = true;
-			cout << "Welcome, "; username.print(); cout << "!";
+			cout << "Welcome, "; 
+			username.print(); 
+			cout << "!";
 			break;
 		}
-
-		tempUserName = empty;
-		tempPassword = empty;
 	}
-
+	
 	if (!userExist)
 		cout << "Wrong username or password!";
-
-	file.close();
 }
 
 void CommandLine::booksAll()

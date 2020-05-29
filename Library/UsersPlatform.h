@@ -19,6 +19,9 @@ public:
 	UsersPlatform& operator=(const UsersPlatform& other);
 	~UsersPlatform();
 
+	User* getUsers() const;
+	int getCount() const;
+
 	void AddUser(String username, String password, bool isAdmin = false);
 
 	void PrintAll();

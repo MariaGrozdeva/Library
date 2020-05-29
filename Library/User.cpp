@@ -14,6 +14,19 @@ User::User(String username, String password, bool isAdmin)
 	this->isAdmin = isAdmin;
 }
 
+const char* User::getUsername() const
+{
+	return username.getStr();
+}
+const char* User::getPassword() const
+{
+	return password.getStr();
+}
+bool User::getIsAdmin() const
+{
+	return isAdmin;
+}
+
 void User::Print()
 {
 	username.print();

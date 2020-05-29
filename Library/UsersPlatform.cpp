@@ -51,6 +51,15 @@ UsersPlatform::~UsersPlatform()
 	Free();
 }
 
+User* UsersPlatform::getUsers() const
+{
+	return users;
+}
+int UsersPlatform::getCount() const
+{
+	return count;
+}
+
 void UsersPlatform::AddUser(String username, String password, bool isAdmin)
 {
 	if (count == capacity)

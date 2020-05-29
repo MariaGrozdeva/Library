@@ -5,8 +5,8 @@ const int MAX_SIZE_OF_COMMAND = 13;
 class CommandLine
 {
 private:
+	UsersPlatform pl;
 	String fileName;
-	//String value;
 
 	char command[MAX_SIZE_OF_COMMAND];
 	char letter;
