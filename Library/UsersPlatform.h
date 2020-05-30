@@ -1,4 +1,5 @@
 #include "User.h"
+
 class UsersPlatform
 {
 private:

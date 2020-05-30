@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
+    <ClCompile Include="BooksLibrary.cpp" />
     <ClCompile Include="CommandLine.cpp" />
     <ClCompile Include="Library.cpp" />
     <ClCompile Include="String.cpp" />
@@ -156,10 +157,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
+    <ClInclude Include="BooksLibrary.h" />
     <ClInclude Include="CommandLine.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="UsersPlatform.h" />
+    <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

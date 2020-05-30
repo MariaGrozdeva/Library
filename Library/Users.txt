@@ -1,3 +1,3 @@
-Gosho 1234
-Mosho 5678
-Tosho 9101112
+admin, i<3c++, isAdmin
+gosho, 18, isAdmin
+mosho, 20

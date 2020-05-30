@@ -1,20 +1,35 @@
 #include "String.h"
+#include "Vector.hpp"
+
+using namespace std;
 
 class Book
 {
 private:
-	String author;
 	String title;
+	String author;
 	String genre;
+	int un;
+
 	String description;
 	int yearOfRelease;
-	String keyWords;
 	double rating;
-	int un;
+
+	Vector<String> keyWords;
 
 public:
 	Book();
 
-	Book(String author, String title, String genre, String description, 
-		int yearOfRelease, String keyWords, double rating, int un);
+	Book(String title, String author, String genre, int un,
+		int yearOfRelease, double rating, String description);
+
+	void setUn(int un);
+	void setYearOfRelease(int yearOfRelease);
+	void setRating(double rating);
+
+	int getUn() const;
+	int getYearOfRelease() const;
+	double getRating() const;
+
+	void Print() const;
 };

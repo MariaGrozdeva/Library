@@ -2,25 +2,62 @@
 
 Book::Book()
 {
-	author.setStr("Unknown");
 	title.setStr("Untitled");
-	title.setStr("Genreless");
-	title.setStr("No descr");
-	yearOfRelease = 2021;
-	keyWords.setStr("No keyWords");
-	rating = -1;
+	author.setStr("Unknown");
+	genre.setStr("Genreless");
 	un = -1;
+
+	yearOfRelease = 2021;
+	rating = -1;
+	description.setStr("No descr");
 }
 
-Book::Book(String author, String title, String genre, String description,
-	int yearOfRelease, String keyWords, double rating, int un)
+Book::Book(String title, String author, String genre, int un,
+	int yearOfRelease, double rating, String description)
 {
-	this->author.setStr(author.getStr());
 	this->title.setStr(title.getStr());
+	this->author.setStr(author.getStr());
 	this->genre.setStr(genre.getStr());
-	this->description.setStr(description.getStr());
-	this->yearOfRelease = yearOfRelease;
-	this->keyWords.setStr(keyWords.getStr());
-	this->rating = rating;
 	this->un = un;
+
+	this->yearOfRelease = yearOfRelease;
+	this->rating = rating;
+	this->description.setStr(description.getStr());
+}
+
+void Book::setUn(int un)
+{
+	this->un = un;
+}
+void Book::setYearOfRelease(int yearOfRelease)
+{
+	this->yearOfRelease = yearOfRelease;
+}
+void Book::setRating(double rating)
+{
+	this->rating = rating;
+}
+
+int Book::getUn() const
+{
+	return un;
+}
+int Book::getYearOfRelease() const
+{
+	return yearOfRelease;
+}
+double Book::getRating() const
+{
+	return rating;
+}
+
+void Book::Print() const
+{
+	title.print(); cout << " ";
+	author.print();	cout << " ";
+	genre.print(); 
+
+	cout << " " << un << " " << yearOfRelease << " " << rating << " ";
+
+	description.print();
 }

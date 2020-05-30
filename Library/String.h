@@ -1,5 +1,6 @@
 #include <iostream>
 #pragma warning (disable : 4996)
+#pragma once
 
 class String
 {

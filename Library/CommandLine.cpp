@@ -20,7 +20,7 @@ void CommandLine::setAttributes(String& sample)
 	}
 }
 
-//void CommandLine::helperForSaveAndSaveas(String& fileName)
+//void CommandLine::helperForSaveAndSaveas(String& fileUsers)
 //{
 //	ofstream file;
 //	file.open(fileName.getStr());
@@ -44,14 +44,37 @@ void CommandLine::setAttributes(String& sample)
 //		}
 //		file.write("\n", sizeof(char));
 //	}
-//
 //	file.close();
 //}
+
 void CommandLine::helperToCreateNewFile()
 {
 	ofstream newFile(fileName.getStr()); // Създаваме празен файл, както е по условие.
 	cerr << "Such file doesn't exist. A new empty file with the given name was created for you" << endl;
 	newFile.close();
+}
+
+void CommandLine::writeUsersInFile()
+{
+	fileUsers.open("Users.txt", ofstream::trunc);
+
+	int len = pl.getCount();
+	for (int i = 0; i < len; i++)
+	{
+		int lenOfName = strlen(pl.getUsers()[i].getUsername());
+		int lenOfPass = strlen(pl.getUsers()[i].getPassword());
+
+		fileUsers.write(pl.getUsers()[i].getUsername(), lenOfName);
+		fileUsers << ", ";
+		fileUsers.write(pl.getUsers()[i].getPassword(), lenOfPass);
+
+		if (pl.getUsers()[i].getIsAdmin())
+			fileUsers << ", isAdmin";
+
+		fileUsers.write("\n", sizeof(char));
+	}
+
+	fileUsers.close();
 }
 
 //void CommandLine::save(String& fileName)
@@ -76,7 +99,6 @@ void CommandLine::close() const
 {
 	cout << "Successfully closed" << " " << fileName.getStr();
 }
-
 void CommandLine::help() const
 {
 	cout << "The following commands are supported:" << endl;
@@ -87,9 +109,9 @@ void CommandLine::help() const
 	cout << "help			prints this information" << endl;
 	cout << "exit			exists the program" << endl;
 }
-
-void CommandLine::exit() const
+void CommandLine::exit()
 {
+	writeUsersInFile();
 	cout << "Exiting the program..." << endl;
 }
 
@@ -99,6 +121,12 @@ void CommandLine::open()
 
 	String emptyFileName;
 	ifstream file;
+
+	String admin;
+	admin.setStr("admin");
+	String adminPass;
+	adminPass.setStr("i<3c++");
+	pl.AddUser(admin, adminPass, true);
 
 	while (strcmp(command, "exit") != 0)
 	{
@@ -125,13 +153,17 @@ void CommandLine::open()
 			{
 				enterCommand();
 
-				if (strcmp(command, "login") == 0)
+				if (strcmp(command, "login") == 0 && login())
 				{
-					login();
-
 					while (true)
 					{
 						enterCommand();
+
+						if (strcmp(command, "login") == 0)
+						{
+							cout << "You are already logged in.";
+							continue;
+						}
 
 						if (strcmp(command, "books") == 0)
 						{
@@ -143,20 +175,36 @@ void CommandLine::open()
 							else if (strcmp(command, "find") == 0);
 							else if (strcmp(command, "sort") == 0);
 							else if (strcmp(command, "view") == 0);
-							else if (strcmp(command, "add") == 0);
-							else if (strcmp(command, "remove") == 0);
+							else if (strcmp(command, "add") == 0 && logged.getIsAdmin())
+								booksAdd();
+
+							else if (strcmp(command, "remove") == 0 && logged.getIsAdmin());
+
+							else
+								cout << "Wrong command or the logged user is not an admin.";
 						}
 
-						else if (strcmp(command, "users") == 0)
+						else if (strcmp(command, "users") == 0 && logged.getIsAdmin())
 						{
 							enterCommand();
 
-							if (strcmp(command, "add") == 0);
+							if (strcmp(command, "add") == 0)
+								usersAdd();
+
 							else if (strcmp(command, "remove") == 0);
 						}
 
+						else if (strcmp(command, "users") == 0 && !logged.getIsAdmin())
+							cout << "Wrong command or the logged user is not an admin.";
+
 						else if (strcmp(command, "logout") == 0)
+						{
+							logout();
 							break;
+						}
+
+						else if (strcmp(command, "print") == 0)
+							pl.PrintAll();
 					}
 				}
 
@@ -188,7 +236,7 @@ void CommandLine::open()
 	}
 }
 
-void CommandLine::login()
+bool CommandLine::login()
 {
 	bool userExist = false;
 
@@ -198,17 +246,6 @@ void CommandLine::login()
 	setAttributes(username);
 	setAttributes(password);
 
-	String name1;
-	name1.setStr("Pesho");
-	String password1;
-	password1.setStr("1234");
-	pl.AddUser(name1, password1);
-
-	String name2;
-	name2.setStr("Gosho");
-	String password2;
-	password2.setStr("5678");
-	pl.AddUser(name2, password2, true);
 	int len = pl.getCount();
 
 	for (int i = 0; i < len; i++)
@@ -216,6 +253,8 @@ void CommandLine::login()
 		if ((strcmp(pl.getUsers()[i].getUsername(), username.getStr()) == 0) &&
 			((strcmp(pl.getUsers()[i].getPassword(), password.getStr()) == 0)))
 		{
+			logged = pl.getUsers()[i];
+
 			userExist = true;
 			cout << "Welcome, "; 
 			username.print(); 
@@ -225,7 +264,16 @@ void CommandLine::login()
 	}
 	
 	if (!userExist)
+	{
 		cout << "Wrong username or password!";
+		return false;
+	}
+	return true;
+}
+void CommandLine::logout()
+{
+	User emptyUser;
+	logged = emptyUser;
 }
 
 void CommandLine::booksAll()
@@ -237,10 +285,20 @@ void CommandLine::booksAll()
 
 	while (!file.eof())
 	{
+		int count = 0;
 		while (ch != '\n')
 		{
 			file.get(ch);
-			cout << ch;
+
+			if (ch == '|')
+				count++;
+
+			if (count < 4)
+			{			
+				if (ch == '|')
+					ch = ' ';
+				cout << ch;
+			}
 		}
 		cout << endl;
 
@@ -253,8 +311,63 @@ void CommandLine::booksAll()
 
 	file.close();
 }
-
-void CommandLine::booksFind()
+void CommandLine::booksAdd()
 {
+	String title;
+	String author;
+	String genre;
 
+	int un;
+	int yearOfRelease;
+	double rating;
+
+	String description;
+
+	setAttributes(title);
+	setAttributes(author);
+	setAttributes(genre);
+
+	cin >> un;
+	cin >> yearOfRelease;
+	cin >> rating;
+
+	while ((letter > '0' && letter < '9') || letter == '.' || letter == ' ')
+		cin.get(letter);
+
+	description.push_back(letter);
+	while (true)
+	{
+		cin.get(letter);
+
+		if (letter == '\n')
+			break;
+
+		description.push_back(letter);
+	}
+
+	lib.AddBook(title, author, genre, un, yearOfRelease, rating, description);
+}
+
+void CommandLine::usersAdd()
+{
+	String username;
+	String password;
+	String admin;
+
+	setAttributes(username);
+	setAttributes(password);
+	setAttributes(admin);
+
+	if (strcmp(admin.getStr(), "admin") == 0)
+	{
+		cout << "Successfully added another user "; username.print();
+		pl.AddUser(username, password, true);
+	}
+	else if (strcmp(admin.getStr(), "noAdmin") == 0)
+	{
+		cout << "Successfully added another user "; username.print();
+		pl.AddUser(username, password);
+	}
+	else
+		cout << "You should tell what rights has the user. Write \"admin\" or \"noAdmin\" after the password.";
 }
