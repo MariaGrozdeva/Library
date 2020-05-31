@@ -96,6 +96,85 @@ void BooksLibrary::booksRemove(String title)
 	count--;
 }
 
+void BooksLibrary::booksFind(String option, String option_string)
+{
+	if (strcmp(option.getStr(), "title") == 0)
+	{
+		bool bookExist = false;
+		for (int i = 0; i < count; i++)
+		{
+			if (strcmp(books[i].getTitle(), option_string.getStr()) == 0)
+			{
+				bookExist = true;
+				books[i].Print();
+				break;
+			}
+		}
+		if (!bookExist)
+		{
+			cerr << "Invalid title, such book doesn't exist.";
+			return;
+		}
+	}
+	else if (strcmp(option.getStr(), "author") == 0)
+	{
+		bool bookExist = false;
+		for (int i = 0; i < count; i++)
+		{
+			if (strcmp(books[i].getAuthor(), option_string.getStr()) == 0)
+			{
+				bookExist = true;
+				books[i].Print();
+				break;
+			}
+		}
+		if (!bookExist)
+		{
+			cerr << "Invalid author, such book doesn't exist.";
+			return;
+		}
+	}
+	else if (strcmp(option.getStr(), "tag") == 0)
+	{
+		bool bookExist = false;
+		for (int i = 0; i < count; i++)
+		{
+			for (int j = 0; j < books[i].getKeyWords().size(); j++)
+			{
+				if (strcmp(books[i].getKeyWords().at(j).getStr(), option_string.getStr()) == 0)
+				{
+					bookExist = true;
+					books[i].Print();
+					break;
+				}
+			}
+		}
+		if (!bookExist)
+		{
+			cerr << "Invalid tag, such book doesn't exist.";
+			return;
+		}
+	}
+}
+void BooksLibrary::booksView(int isbn_value)
+{
+	bool bookExist = false;
+	for (int i = 0; i < count; i++)
+	{
+		if (books[i].getUn() == isbn_value)
+		{
+			bookExist = true;
+			books[i].Print();
+			break;
+		}
+	}
+	if (!bookExist)
+	{
+		cerr << "Invalid un, such book doesn't exist.";
+		return;
+	}
+}
+
 void BooksLibrary::PrintAll()
 {
 	for (int i = 0; i < count; i++)

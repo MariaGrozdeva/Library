@@ -20,33 +20,6 @@ void CommandLine::setAttributes(String& sample, char del)
 	}
 }
 
-//void CommandLine::helperForSaveAndSaveas(String& fileUsers)
-//{
-//	ofstream file;
-//	file.open(fileName.getStr());
-//
-//	int countOfRows = table.getMaxRow();
-//
-//	for (int i = 1; i < countOfRows; i++)
-//	{
-//		if (!table.getRows()[i].getIsEmpty())
-//		{
-//			int countOfCols = table.getRows()[i].getCapacity();
-//
-//			for (int j = 1; j < countOfCols; j++)
-//			{
-//				int len = strlen(table.getCellOnRow(i, j));
-//				file.write(table.getCellOnRow(i, j), len);
-//
-//				if (j != countOfCols - 1)
-//					file.write(",", sizeof(char));
-//			}
-//		}
-//		file.write("\n", sizeof(char));
-//	}
-//	file.close();
-//}
-
 void CommandLine::helperToCreateNewFile()
 {
 	ofstream newFile(fileName.getStr()); // Създаваме празен файл, както е по условие.
@@ -54,9 +27,9 @@ void CommandLine::helperToCreateNewFile()
 	newFile.close();
 }
 
-void CommandLine::writeBooksInFile()
+void CommandLine::writeBooksInFile(String& fileName)
 {
-	fileBooks.open("Books.txt", ofstream::trunc);
+	fileBooks.open(fileName.getStr(), ofstream::trunc);
 
 	for (int i = 0; i < lib.getCount(); i++)
 	{
@@ -99,7 +72,7 @@ void CommandLine::writeUsersInFile()
 {
 	fileUsers.open("Users.txt", ofstream::trunc);
 
-	for (int i = 0; i < lib.getCount(); i++)
+	for (int i = 0; i < pl.getCount(); i++)
 	{
 		int lenOfName = strlen(pl.getUsers()[i].getUsername());
 		int lenOfPass = strlen(pl.getUsers()[i].getPassword());
@@ -117,23 +90,24 @@ void CommandLine::writeUsersInFile()
 	fileUsers.close();
 }
 
-//void CommandLine::save(String& fileName)
-//{
-//	helperForSaveAndSaveas(fileName);
-//
-//	cout << "Successfully saved " << fileName.getStr() << endl;
-//}
+void CommandLine::save()
+{
+	String fileNameBooks;
+	fileNameBooks.setStr("Books.txt");
 
-//void CommandLine::saveas()
-//{
-//	String userChosenFileName; // Създаваме името на файла, в което потребителят иска да запише промените.
-//
-//	setAttributes(userChosenFileName);
-//
-//	helperForSaveAndSaveas(userChosenFileName);
-//
-//	cout << "Successfully saved another " << userChosenFileName.getStr() << endl;
-//}
+	writeBooksInFile(fileNameBooks);
+
+	cout << "Successfully saved " << fileNameBooks.getStr() << endl;
+}
+void CommandLine::saveas()
+{
+	String userChosenFileNameBooks;
+	setAttributes(userChosenFileNameBooks, '|');
+
+	writeBooksInFile(userChosenFileNameBooks);
+
+	cout << "Successfully saved another " << userChosenFileNameBooks.getStr() << endl;
+}
 
 void CommandLine::close() const
 {
@@ -151,8 +125,8 @@ void CommandLine::help() const
 }
 void CommandLine::exit()
 {
-	writeBooksInFile();
 	writeUsersInFile();
+
 	cout << "Exiting the program..." << endl;
 }
 
@@ -215,9 +189,26 @@ void CommandLine::open()
 							if (strcmp(command, "all") == 0)
 								booksAll();
 
-							else if (strcmp(command, "find") == 0);
+							else if (strcmp(command, "find") == 0)
+							{
+								String option;
+								String option_string;
+
+								setAttributes(option, ' ');
+								setAttributes(option_string, '|');
+
+								lib.booksFind(option, option_string);
+							}
+
 							else if (strcmp(command, "sort") == 0);
-							else if (strcmp(command, "view") == 0);
+							else if (strcmp(command, "view") == 0)
+							{
+								int isbn_value;
+								cin >> isbn_value;
+
+								lib.booksView(isbn_value);
+							}
+
 							else if (strcmp(command, "add") == 0)
 								booksAdd();
 
@@ -240,7 +231,13 @@ void CommandLine::open()
 							if (strcmp(command, "add") == 0)
 								usersAdd();
 
-							else if (strcmp(command, "remove") == 0);
+							else if (strcmp(command, "remove") == 0)
+							{
+								String searchedUsername;
+
+								setAttributes(searchedUsername, '|');
+								pl.usersRemove(searchedUsername);
+							}
 						}
 
 						else if (strcmp(command, "users") == 0 && !logged.getIsAdmin())
@@ -261,10 +258,10 @@ void CommandLine::open()
 				}
 
 				else if (strcmp(command, "save") == 0)
-					;//save(fileName);
+					save();
 
 				else if (strcmp(command, "saveas") == 0)
-					;//saveas();
+					saveas();
 
 				else if (strcmp(command, "close") == 0)
 				{
@@ -387,7 +384,6 @@ void CommandLine::booksAdd()
 	setAttributes(author, '|');
 	setAttributes(genre, '|');
 
-	cin.get(letter);
 	cin >> un;
 	cin.get(letter);
 	cin >> yearOfRelease;
@@ -421,6 +417,15 @@ void CommandLine::booksAdd()
 
 	if (logged.getIsAdmin())
 	{
+		for (int i = 0; i < lib.getCount(); i++)
+		{
+			if (lib.getBooks()[i].getUn() == un)
+			{
+				cout << "A book with the given un already exist.";
+				return;
+			}
+		}
+
 		cout << "Successfully added another book "; title.print();
 		lib.AddBook(title, author, genre, un, yearOfRelease, rating, description, keyWords);
 	}

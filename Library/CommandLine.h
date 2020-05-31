@@ -20,15 +20,14 @@ private:
 
 	void setAttributes(String& sample, char del);
 
-	//void helperForSaveAndSaveas(String& diffFileName);
 	void helperToCreateNewFile();
-	void writeBooksInFile();
+	void writeBooksInFile(String& fileName);
 	void writeUsersInFile();
 
 public:
 	void enterCommand();
 
-	void save(String& fileName);
+	void save();
 	void saveas();
 	void close() const;
 	void help() const;
@@ -43,5 +42,4 @@ public:
 	void booksAdd();
 
 	void usersAdd();
-	void usersRemove();
 };

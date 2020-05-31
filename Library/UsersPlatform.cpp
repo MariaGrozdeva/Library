@@ -68,6 +68,31 @@ void UsersPlatform::AddUser(String username, String password, bool isAdmin)
 
 	users[count++] = *new User(username, password, isAdmin);
 }
+void UsersPlatform::usersRemove(String username)
+{
+	bool userExist = false;
+	int posOfUser = -1;
+
+	for (int i = 0; i < count; i++)
+	{
+		if (strcmp(users[i].getUsername(), username.getStr()) == 0)
+		{
+			cout << "Successfully removed "; username.print();
+
+			userExist = true;
+			posOfUser = i;
+		}
+	}
+	if (!userExist)
+	{
+		cerr << "Invalid username, such user doesn't exist.";
+		return;
+	}
+
+	for (int i = posOfUser; i < count - 1; i++)
+		users[i] = users[i + 1];
+	count--;
+}
 
 void UsersPlatform::PrintAll()
 {

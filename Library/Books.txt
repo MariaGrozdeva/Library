@@ -1,2 +1,4 @@
-The Count of Monte Cristo|Alexandre Dumas|Novel|2|1844|9.7|The classic story of an innocent man wrongly, but deliberately imprisoned and his brilliant strategy for revenge against those who betrayed him.|imprisonment,revenge
-dr kniga|dr avtor|dr janr|3|44|55|kratko opisanie|dumi,kluchovi
+The Count of Monte Cristo|Alexandre Dumas|Novel|22|1844|9.7|The classic story of an innocent man wrongly, but deliberately imprisoned and his brilliant strategy for revenge against those who betrayed him.|imprisonment,revenge
+The Thorn Birds|Colleen McCullough|Romance novel|48|1977|9.2|The Thorn Birds is a sweeping love story set on Drogheda, a sheep station in the Australian Outback.|love,romance
+kniga|avtor|janr|1231|33|44|opisanie kratko|kluchovi,dumi
+dr kniga|dr avtor|dr janr|66|44|55|kratko opisanie|dumi,kluchovi

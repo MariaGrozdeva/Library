@@ -24,6 +24,7 @@ public:
 	int getCount() const;
 
 	void AddUser(String username, String password, bool isAdmin = false);
+	void usersRemove(String title);
 
 	void PrintAll();
 };
