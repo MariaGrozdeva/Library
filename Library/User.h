@@ -1,6 +1,7 @@
+#include "String.h"
 using namespace std;
 
-#include "String.h"
+#pragma once
 
 class User
 {

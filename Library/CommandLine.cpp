@@ -58,14 +58,14 @@ void CommandLine::writeBooksInFile()
 {
 	fileBooks.open("Books.txt", ofstream::trunc);
 
-	int len = lib.getCount();
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < lib.getCount(); i++)
 	{
 		int lenOfTitle = strlen(lib.getBooks()[i].getTitle());
 		int lenOfAuthor = strlen(lib.getBooks()[i].getAuthor());
 		int lenOfGenre = strlen(lib.getBooks()[i].getGenre());
 		int lenOfDescr = strlen(lib.getBooks()[i].getDescr());
 		int countOfKeyWords = lib.getBooks()[i].getKeyWords().size();
+
 		fileBooks.write(lib.getBooks()[i].getTitle(), lenOfTitle);
 		fileBooks << "|";
 		fileBooks.write(lib.getBooks()[i].getAuthor(), lenOfAuthor);
@@ -99,8 +99,7 @@ void CommandLine::writeUsersInFile()
 {
 	fileUsers.open("Users.txt", ofstream::trunc);
 
-	int len = pl.getCount();
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < lib.getCount(); i++)
 	{
 		int lenOfName = strlen(pl.getUsers()[i].getUsername());
 		int lenOfPass = strlen(pl.getUsers()[i].getPassword());
@@ -197,6 +196,8 @@ void CommandLine::open()
 
 				if (strcmp(command, "login") == 0 && login())
 				{
+					cout << endl << "Use \"|\" in order to separate the different characteristics of a book when adding one.";
+
 					while (true)
 					{
 						enterCommand();
@@ -217,10 +218,16 @@ void CommandLine::open()
 							else if (strcmp(command, "find") == 0);
 							else if (strcmp(command, "sort") == 0);
 							else if (strcmp(command, "view") == 0);
-							else if (strcmp(command, "add") == 0 )
+							else if (strcmp(command, "add") == 0)
 								booksAdd();
 
-							else if (strcmp(command, "remove") == 0 && logged.getIsAdmin());
+							else if (strcmp(command, "remove") == 0 && logged.getIsAdmin())
+							{
+								String searchedTitle;
+
+								setAttributes(searchedTitle, '|');
+								lib.booksRemove(searchedTitle);
+							}
 
 							else
 								cout << "Wrong command or the logged user is not an admin.";
@@ -413,7 +420,10 @@ void CommandLine::booksAdd()
 	}
 
 	if (logged.getIsAdmin())
+	{
+		cout << "Successfully added another book "; title.print();
 		lib.AddBook(title, author, genre, un, yearOfRelease, rating, description, keyWords);
+	}
 	else
 		cout << "User is not an admin.";
 }

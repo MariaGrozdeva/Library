@@ -91,7 +91,8 @@ int Vector<T>::get_capacity() const
 template <typename T>
 T& Vector<T>::at(int index) const
 {
-	if (index < 0 || index >= currentEl) {
+	if (index < 0 || index >= currentEl)
+	{
 		std::cerr << "Invalid index, output changed to the value of arr[0]" << std::endl;
 		return arr[0];
 	}
@@ -108,7 +109,8 @@ void Vector<T>::push_back(T element)
 template <typename T>
 void Vector<T>::erase(int index)
 {
-	if (index < 0 || index >= currentEl) {
+	if (index < 0 || index >= currentEl) 
+	{
 		std::cerr << "Invalid index, no value here" << std::endl;
 		return;
 	}

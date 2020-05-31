@@ -43,4 +43,5 @@ public:
 	void booksAdd();
 
 	void usersAdd();
+	void usersRemove();
 };

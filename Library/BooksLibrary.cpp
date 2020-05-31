@@ -70,6 +70,31 @@ void BooksLibrary::AddBook(String title, String author, String genre, int un,
 	books[count++] = *new Book(title, author, genre, un,
 		yearOfRelease, rating, description, keyWords);
 }
+void BooksLibrary::booksRemove(String title)
+{
+	bool bookExist = false;
+	int posOfBook = -1;
+
+	for (int i = 0; i < count; i++)
+	{
+		if (strcmp(books[i].getTitle(), title.getStr()) == 0)
+		{
+			cout << "Successfully removed "; title.print();
+
+			bookExist = true;
+			posOfBook = i;
+		}
+	}
+	if (!bookExist)
+	{
+		cerr << "Invalid title, such book doesn't exist.";
+		return;
+	}
+
+	for (int i = posOfBook; i < count - 1; i++)
+		books[i] = books[i + 1];
+	count--;
+}
 
 void BooksLibrary::PrintAll()
 {

@@ -1,4 +1,5 @@
 #include "Book.h"
+#include "User.h"
 
 class BooksLibrary
 {
@@ -25,6 +26,8 @@ public:
 
 	void AddBook(String title, String author, String genre, int un,
 		int yearOfRelease, double rating, String description, Vector<String>keyWords);
+
+	void booksRemove(String title);
 
 	void PrintAll();
 };

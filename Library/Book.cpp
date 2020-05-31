@@ -74,5 +74,5 @@ void Book::Print() const
 	
 	int len = keyWords.size();
 	for (int i = 0; i < len; i++)
-		cout << keyWords.at(i).getStr() << " ";
+		cout << " " << keyWords.at(i).getStr();
 }
