@@ -7,13 +7,13 @@ void CommandLine::enterCommand()
 	cin.ignore();
 }
 
-void CommandLine::setAttributes(String& sample)
+void CommandLine::setAttributes(String& sample, char del)
 {
 	while (true)
 	{
 		cin.get(letter);
 
-		if (letter == ' ' || letter == '\n')
+		if (letter == del || letter == '\n')
 			break;
 
 		sample.push_back(letter);
@@ -54,6 +54,47 @@ void CommandLine::helperToCreateNewFile()
 	newFile.close();
 }
 
+void CommandLine::writeBooksInFile()
+{
+	fileBooks.open("Books.txt", ofstream::trunc);
+
+	int len = lib.getCount();
+	for (int i = 0; i < len; i++)
+	{
+		int lenOfTitle = strlen(lib.getBooks()[i].getTitle());
+		int lenOfAuthor = strlen(lib.getBooks()[i].getAuthor());
+		int lenOfGenre = strlen(lib.getBooks()[i].getGenre());
+		int lenOfDescr = strlen(lib.getBooks()[i].getDescr());
+		int countOfKeyWords = lib.getBooks()[i].getKeyWords().size();
+		fileBooks.write(lib.getBooks()[i].getTitle(), lenOfTitle);
+		fileBooks << "|";
+		fileBooks.write(lib.getBooks()[i].getAuthor(), lenOfAuthor);
+		fileBooks << "|";
+		fileBooks.write(lib.getBooks()[i].getGenre(), lenOfGenre);
+		fileBooks << "|";
+		fileBooks << lib.getBooks()[i].getUn();
+		fileBooks << "|";
+		fileBooks << lib.getBooks()[i].getYearOfRelease();
+		fileBooks << "|";
+		fileBooks << lib.getBooks()[i].getRating();
+		fileBooks << "|";
+		fileBooks.write(lib.getBooks()[i].getDescr(), lenOfDescr);
+		fileBooks << "|";
+		
+		for (int j = 0; j < countOfKeyWords; j++)
+		{
+			int lenOfKeyWord = strlen(lib.getBooks()[i].getKeyWords().at(j).getStr());
+			fileBooks.write(lib.getBooks()[i].getKeyWords().at(j).getStr(), lenOfKeyWord);
+
+			if (j != countOfKeyWords - 1)
+				fileBooks.put(',');
+		}
+
+		fileBooks.write("\n", sizeof(char));
+	}
+
+	fileBooks.close();
+}
 void CommandLine::writeUsersInFile()
 {
 	fileUsers.open("Users.txt", ofstream::trunc);
@@ -111,6 +152,7 @@ void CommandLine::help() const
 }
 void CommandLine::exit()
 {
+	writeBooksInFile();
 	writeUsersInFile();
 	cout << "Exiting the program..." << endl;
 }
@@ -134,7 +176,7 @@ void CommandLine::open()
 
 		if (strcmp(command, "open") == 0)
 		{
-			setAttributes(fileName);
+			setAttributes(fileName, ' ');
 
 			file.open(fileName.getStr());
 
@@ -175,7 +217,7 @@ void CommandLine::open()
 							else if (strcmp(command, "find") == 0);
 							else if (strcmp(command, "sort") == 0);
 							else if (strcmp(command, "view") == 0);
-							else if (strcmp(command, "add") == 0 && logged.getIsAdmin())
+							else if (strcmp(command, "add") == 0 )
 								booksAdd();
 
 							else if (strcmp(command, "remove") == 0 && logged.getIsAdmin());
@@ -203,8 +245,11 @@ void CommandLine::open()
 							break;
 						}
 
-						else if (strcmp(command, "print") == 0)
+						else if (strcmp(command, "printUsers") == 0)
 							pl.PrintAll();
+
+						else if (strcmp(command, "printBooks") == 0)
+							lib.PrintAll();
 					}
 				}
 
@@ -229,7 +274,7 @@ void CommandLine::open()
 				else if (strcmp(command, "exit") == 0)
 				{
 					exit();
-					return;
+					break;
 				}
 			}
 		}
@@ -243,8 +288,8 @@ bool CommandLine::login()
 	String username;
 	String password;
 
-	setAttributes(username);
-	setAttributes(password);
+	setAttributes(username, ' ');
+	setAttributes(password, ' ');
 
 	int len = pl.getCount();
 
@@ -272,6 +317,8 @@ bool CommandLine::login()
 }
 void CommandLine::logout()
 {
+	cout << logged.getUsername() << " successfully logged out";
+
 	User emptyUser;
 	logged = emptyUser;
 }
@@ -313,6 +360,8 @@ void CommandLine::booksAll()
 }
 void CommandLine::booksAdd()
 {
+	countOfKeyWords = 0;
+
 	String title;
 	String author;
 	String genre;
@@ -323,29 +372,50 @@ void CommandLine::booksAdd()
 
 	String description;
 
-	setAttributes(title);
-	setAttributes(author);
-	setAttributes(genre);
+	Vector<String> keyWords;
+	String tempWord;
+	String emptyWord;
 
+	setAttributes(title, '|');
+	setAttributes(author, '|');
+	setAttributes(genre, '|');
+
+	cin.get(letter);
 	cin >> un;
+	cin.get(letter);
 	cin >> yearOfRelease;
+	cin.get(letter);
 	cin >> rating;
+	cin.get(letter);
+	cin.get(letter);
 
-	while ((letter > '0' && letter < '9') || letter == '.' || letter == ' ')
+	while ((letter > '0' && letter < '9') || letter == '.')
 		cin.get(letter);
 
 	description.push_back(letter);
-	while (true)
+	setAttributes(description, '|');
+	cin.get(letter);
+
+	tempWord.push_back(letter);
+	while (letter != '\n')
 	{
 		cin.get(letter);
 
-		if (letter == '\n')
-			break;
+		if (letter == ',' || letter == '\n')
+		{
+			keyWords.push_back(tempWord);
+			tempWord = emptyWord;
+			countOfKeyWords++;
+			continue;
+		}
 
-		description.push_back(letter);
+		tempWord.push_back(letter);
 	}
 
-	lib.AddBook(title, author, genre, un, yearOfRelease, rating, description);
+	if (logged.getIsAdmin())
+		lib.AddBook(title, author, genre, un, yearOfRelease, rating, description, keyWords);
+	else
+		cout << "User is not an admin.";
 }
 
 void CommandLine::usersAdd()
@@ -354,9 +424,9 @@ void CommandLine::usersAdd()
 	String password;
 	String admin;
 
-	setAttributes(username);
-	setAttributes(password);
-	setAttributes(admin);
+	setAttributes(username, ' ');
+	setAttributes(password, ' ');
+	setAttributes(admin, ' ');
 
 	if (strcmp(admin.getStr(), "admin") == 0)
 	{

@@ -5,6 +5,7 @@ void UsersPlatform::CopyFrom(const UsersPlatform& other)
 	capacity = other.capacity;
 	count = other.count;
 
+	users = new User[capacity + 1];
 	for (int i = 0; i < count; i++)
 		users[i] = other.users[i];
 }

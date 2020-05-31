@@ -1,3 +1,2 @@
 admin, i<3c++, isAdmin
-gosho, 18, isAdmin
-mosho, 20
+mara, 20

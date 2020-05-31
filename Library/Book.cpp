@@ -13,7 +13,7 @@ Book::Book()
 }
 
 Book::Book(String title, String author, String genre, int un,
-	int yearOfRelease, double rating, String description)
+	int yearOfRelease, double rating, String description, Vector<String> keyWords)
 {
 	this->title.setStr(title.getStr());
 	this->author.setStr(author.getStr());
@@ -23,19 +23,25 @@ Book::Book(String title, String author, String genre, int un,
 	this->yearOfRelease = yearOfRelease;
 	this->rating = rating;
 	this->description.setStr(description.getStr());
+
+	this->keyWords = keyWords;
 }
 
-void Book::setUn(int un)
+const char* Book::getTitle() const
 {
-	this->un = un;
+	return title.getStr();
 }
-void Book::setYearOfRelease(int yearOfRelease)
+const char* Book::getAuthor() const
 {
-	this->yearOfRelease = yearOfRelease;
+	return author.getStr();
 }
-void Book::setRating(double rating)
+const char* Book::getGenre() const
 {
-	this->rating = rating;
+	return genre.getStr();
+}
+const char* Book::getDescr() const
+{
+	return description.getStr();
 }
 
 int Book::getUn() const
@@ -51,6 +57,11 @@ double Book::getRating() const
 	return rating;
 }
 
+Vector<String> Book::getKeyWords() const
+{
+	return keyWords;
+}
+
 void Book::Print() const
 {
 	title.print(); cout << " ";
@@ -60,4 +71,8 @@ void Book::Print() const
 	cout << " " << un << " " << yearOfRelease << " " << rating << " ";
 
 	description.print();
+	
+	int len = keyWords.size();
+	for (int i = 0; i < len; i++)
+		cout << keyWords.at(i).getStr() << " ";
 }

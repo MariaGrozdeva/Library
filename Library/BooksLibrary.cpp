@@ -5,6 +5,7 @@ void BooksLibrary::CopyFrom(const BooksLibrary& other)
 	capacity = other.capacity;
 	count = other.count;
 
+	books = new Book[capacity + 1];
 	for (int i = 0; i < count; i++)
 		books[i] = other.books[i];
 }
@@ -61,13 +62,13 @@ int BooksLibrary::getCount() const
 }
 
 void BooksLibrary::AddBook(String title, String author, String genre, int un,
-	int yearOfRelease, double rating, String description)
+	int yearOfRelease, double rating, String description, Vector<String>keyWords)
 {
 	if (count == capacity)
 		Resize();
 
 	books[count++] = *new Book(title, author, genre, un,
-		yearOfRelease, rating, description);
+		yearOfRelease, rating, description, keyWords);
 }
 
 void BooksLibrary::PrintAll()

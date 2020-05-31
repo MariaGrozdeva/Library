@@ -6,20 +6,23 @@ const int MAX_SIZE_OF_COMMAND = 13;
 class CommandLine
 {
 private:
-	User logged;
 	UsersPlatform pl;
 	BooksLibrary lib;
+	User logged;
 
 	ofstream fileUsers;
+	ofstream fileBooks;
 	String fileName;
 
 	char command[MAX_SIZE_OF_COMMAND];
 	char letter;
+	int countOfKeyWords;
 
-	void setAttributes(String& sample);
+	void setAttributes(String& sample, char del);
 
 	//void helperForSaveAndSaveas(String& diffFileName);
 	void helperToCreateNewFile();
+	void writeBooksInFile();
 	void writeUsersInFile();
 
 public:

@@ -24,7 +24,7 @@ public:
 	int getCount() const;
 
 	void AddBook(String title, String author, String genre, int un,
-		int yearOfRelease, double rating, String description);
+		int yearOfRelease, double rating, String description, Vector<String>keyWords);
 
 	void PrintAll();
 };
